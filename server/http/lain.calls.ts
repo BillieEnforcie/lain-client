@@ -3,7 +3,7 @@ import { LAIN_URL_BASE } from '../constants/request-constants';
 import { MAL_HTML, MAL_HTML_MESSAGE } from '../constants/response-constants';
 import * as H20 from '../converters/html2obj.converter';
 import * as Rest from './rest';
-import { Index, Page } from '../types/response.types';
+import { ChThread, Index, Page } from '../types/response.types';
 import { toChError, validateResponse } from './util';
 
 export async function getBoards() : Promise<Index> {
@@ -41,4 +41,18 @@ export async function getPage(board: string, pageNum: number): Promise<Page> {
     }
 
     return page;
+}
+
+export async function getThread(board: string, threadId: string) : Promise<ChThread> {
+    let thread;
+    try {
+        let { body } = await Rest.get(`${LAIN_URL_BASE}/${board}/res/${threadId}.html`);
+        thread = H20.fromStringToThread(body , board, true);
+    }
+    catch(err: unknown) {
+        console.log(err);
+        throw toChError(err as Error);
+    }
+
+    return thread;
 }

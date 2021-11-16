@@ -1,5 +1,5 @@
 import got, { GotRequestFunction } from 'got';
-import { BAD_HTML, BOARDS_CORRECT_HTML, CORRECT_PAGE, PAGE_HTML } from '../constants/test/test-constants';
+import { BAD_HTML, BOARDS_CORRECT_HTML, CORRECT_PAGE, CORRECT_THREAD, PAGE_HTML, THREAD_HTML } from '../constants/test/test-constants';
 import { ChError } from '../types/response.types';
 import { toChError } from './util';
 import * as Lain from './lain.calls';
@@ -15,7 +15,11 @@ beforeAll(() => {
     getMock.mockResolvedValueOnce({ statusCode: 200, statusMessage: 'OK', body: BAD_HTML });
     getMock.mockResolvedValueOnce({ statusCode: 403, statusMessage: 'Forbidden', body: '' });
     //getPage
-    getMock.mockResolvedValueOnce({ statusCode: 200, statusMessage: 'OK', body: PAGE_HTML});
+    getMock.mockResolvedValueOnce({ statusCode: 200, statusMessage: 'OK', body: PAGE_HTML });
+    getMock.mockResolvedValueOnce({ statusCode: 200, statusMessage: 'OK', body: BAD_HTML });
+    getMock.mockResolvedValueOnce({ statusCode: 403, statusMessage: 'Forbidden', body: '' });
+    //getThread
+    getMock.mockResolvedValueOnce({ statusCode: 200, statusMessage: 'OK', body: THREAD_HTML });
     getMock.mockResolvedValueOnce({ statusCode: 200, statusMessage: 'OK', body: BAD_HTML });
     getMock.mockResolvedValueOnce({ statusCode: 403, statusMessage: 'Forbidden', body: '' });
 });
@@ -57,4 +61,23 @@ test('getPage_fails upon malformed html', () => {
 test('getPage_fails on status error', () => {
     let err: ChError = toChError({ name: '403', message: 'Forbidden'});
     return Lain.getPage('progr', 1).catch(error => expect(error).toEqual(err));
+});
+
+test('getThread_happy path', () => {
+    let goodThread = CORRECT_THREAD;
+    goodThread.expanded = true;
+    return Lain.getThread('progr', '1').then(response => {
+        expect(response).toEqual(goodThread);
+        goodThread.expanded = false;
+    });
+});
+
+test('getThread_fails upon malformed html', () => {
+    let err: ChError = toChError({ name: MAL_HTML, message: MAL_HTML_MESSAGE } as Error);
+    return Lain.getThread('progr', '1').catch(error => expect(error).toEqual(err));
+});
+
+test('getThread_fails on status error', () => {
+    let err: ChError = toChError({ name: '403', message: 'Forbidden'});
+    return Lain.getThread('progr', '1').catch(error => expect(error).toEqual(err));
 });

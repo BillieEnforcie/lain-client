@@ -54,6 +54,14 @@ export function toPage(board: string, pageNum: number, html: string) {
             }
 }
 
+export function fromStringToThread(html: string, board: string, expanded: boolean) : ChThread {
+    return toThread(
+                querySelectorNullSafe(parse(html), '.thread'),
+                board,
+                expanded
+            );
+}
+
 export function toThread(root: HTMLElement, board: string, expanded: boolean): ChThread {
     return { 
             id: getThreadId(root), 

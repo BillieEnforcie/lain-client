@@ -1,29 +1,7 @@
 import express from 'express';
-import https, { RequestOptions } from 'https';
-import { BOARDS_CORRECT_HTML } from './constants/test/test-constants';
 import * as Lain from './http/lain.calls';
 
 const app = express();
-
-// app.use((req, res, next) => {
-//     req.path = decodeURIComponent(req.path);
-//     console.log(req.path)
-//     next();
-// });
-
-// app.get('*', (req, res, next) => {
-//     console.log(req.path);
-//     console.log(req.url);
-// 
-//     res.send('SDLKFJSLKDF');
-//     next();
-// });
-
-app.get('/ass', (req, res) => {
-    console.log('AYYYYYYY')
-    res.send('FUCK ME')
-});
-
 
 app.get('/api/lain/boards', 
     (req, res) => {
@@ -48,6 +26,20 @@ app.get('/api/lain/:board/page/:pageNum',
             console.log(err);
             res.status(500).send(err);
         });
+    }
+);
+
+app.get('/api/lain/:board/thread/:threadId', 
+    (req, res) => {
+        let { board, threadId } = req.params;
+        console.log(`calling /api/${board}/thread/${threadId}`);
+        Lain.getThread(board, threadId)
+            .then(thread => res.send(thread))
+            .catch(err => {
+                console.log(err);
+                res.status(500).send(err);
+            });
+
     }
 );
 

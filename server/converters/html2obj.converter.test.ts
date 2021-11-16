@@ -25,6 +25,11 @@ test('toThread_Happy Path', () => {
         .toEqual(CORRECT_THREAD);
 });
 
+test('fromStringToThread_Happy Path', () => {
+    expect(H20.fromStringToThread(THREAD_HTML, 'progr', false))
+        .toEqual(CORRECT_THREAD);
+});
+
 test('toPage_Happy Path', () => {
     expect(H20.toPage('progr', 1, PAGE_HTML))
         .toEqual(CORRECT_PAGE);
