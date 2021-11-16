@@ -1,3 +1,4 @@
+import { Response } from 'got';
 import { CALL_ERR, CALL_ERR_MESSAGE, ERROR_STATUS } from "../constants/response-constants";
 import { ChError, Status } from "../types/response.types";
 
@@ -21,8 +22,9 @@ function getStatus(error: Error): Status {
     }
 }
 
-export function validateResponse(statusCode: number, statusMessage?: string) {
-    if(statusCode > 299 || statusCode < 200) {
-        throw { name: statusCode.toString(), message: statusMessage };
+export function validateResponse(response: Response<string>) {
+    if(response.statusCode > 299 || response.statusCode < 200) {
+        throw { name: response.statusCode.toString(), message: response.statusMessage };
     }
+    return response;
 }

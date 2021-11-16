@@ -11,18 +11,68 @@ export interface ChFile {
     thumbnail: string;
 }
 
+export interface Break {
+    br: null;
+}
+
+export interface PlainText {
+    pt: null;
+    text: string;
+}
+
+export interface Anchor {
+    anc: null;
+    text: string;
+    href: string;
+}
+
+export interface InlineCode {
+    ilc: null;
+    text: string;
+}
+
+export interface BlockCode {
+    blc: null;
+    text: string;
+}
+
+export interface Spoiler {
+    splr: null;
+    text: string;
+}
+
+export interface Quote {
+    qt: null;
+    text: string;
+}
+
+export interface Italics {
+    itlc: null;
+    text: string;
+}
+
+export interface BoldFace {
+    bdfc: null;
+    text: string;
+}
+
+export type Fragment = Break | PlainText | Anchor | InlineCode | BlockCode |
+                       Spoiler | Quote | Italics| BoldFace;
+
 export interface Post {
     tripcode?: string;
     posterName: string;
     dateTime: string;
     id: string;
-    text: string;
+    isOP: boolean;
+    text: Fragment[];
+    repliesById: string[];
     files: ChFile[];
 }
 
 export interface ChThread {
     id: string;
-    board: Board;
+    board: string;
     thumbNail: string;
     pinned: boolean;
     replies: number;
@@ -33,14 +83,14 @@ export interface ChThread {
 }
 
 export interface Page {
-    board: Board;
+    board: string;
     num: number;
     threads: ChThread[];
-    totalpages: number;
+    totalPages: number;
 }
 
 export interface Catalog {
-    board: Board;
+    board: string;
     threads: ChThread[];
 }
 
