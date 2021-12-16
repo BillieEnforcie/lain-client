@@ -1,4 +1,4 @@
-import { Board, Break, ChFile, ChThread, Fragment, Post } from "../types/response.types";
+import { Board, Break, Catalog, ChFile, ChThread, Fragment, Post } from "../types/response.types";
 import { parse, HTMLElement, TextNode, Node } from "node-html-parser";
 
 export function toBoards(html: string) : Board[] {
@@ -52,6 +52,21 @@ export function toPage(board: string, pageNum: number, html: string) {
                 threads: threads ? threads : [], 
                 totalPages: totalPages ? totalPages : -1,
             }
+}
+
+/**
+ * Converts the HTML from the board catalog to a Catalog object
+ * @param board the board from which you have pulled the catalog html
+ * @param html the catalog html
+ * @returns a Catalog full of threads
+ */
+export function toCatalog(board: string, html: string) : Catalog {
+    let root = parse(html);
+
+    return {
+        board: board,
+        threads: toCatalogThreads(root, board),
+    }
 }
 
 export function fromStringToThread(html: string, board: string, expanded: boolean) : ChThread {
@@ -330,4 +345,92 @@ function getThreadRootFromPost(post: HTMLElement) : HTMLElement {
         return post.parentNode;
     }
     return new HTMLElement('', {}, '', null);
+}
+
+/**
+ * Converts the catalog HTML into a list of ChThreads
+ * @param root the HTML root of the board catalog
+ * @param board the board you selected
+ */
+function toCatalogThreads(root: HTMLElement, board: string) : ChThread[] {
+    let threads: ChThread[] = []
+
+    threads = root.querySelectorAll('.thread')
+                .map(thread => toCatalogThread(thread, board))
+
+    return threads;
+}
+
+/**
+ * Converts an HTML object of class "thread" into a ChThread.
+ * @param root the HTML element in question
+ * @param board the board you selected
+ * @returns a ChThread representing the catlog thread
+ */
+function toCatalogThread(root: HTMLElement, board: string) : ChThread {
+    let id: string | undefined = root.parentNode.getAttribute('data-id');
+    let pinned: boolean = root.parentNode.getAttribute('data-sticky') === 'true';
+    let title: string | undefined = root.querySelector('img')?.getAttribute('data-subject');
+    let imagesAndReplies: number[] | undefined = getCatalogImagesAndReplies(root);
+    let thumbnail: string | undefined = root.getElementsByTagName('img')[0]?.getAttribute('src');
+    let post: Post = getCatalogPost(root);
+
+    return {
+        id: id ? id : '',
+        board: board,
+        pinned: pinned,
+        replies: imagesAndReplies[0],
+        images: imagesAndReplies[1],
+        title: title ? title : '',
+        expanded: false,
+        posts: [post],
+        thumbNail: thumbnail ? thumbnail : '',
+    }
+}
+
+/**
+ * Gets the number of images and replies from a catalog thread
+ * @param root the root HTML element
+ * @returns a two-element array consisting of the number of replies at index 0
+ * and the number of images at index 1
+ */
+function getCatalogImagesAndReplies(root: HTMLElement) : number[] {
+    let imagesAndReplies: number[] | undefined = 
+        root.querySelector('.replies')
+            ?.getElementsByTagName('strong')[0]
+            ?.innerHTML
+            .split(' ')
+            .map(el => Number(el))
+            .filter(el => !isNaN(el))
+
+        return (imagesAndReplies && imagesAndReplies.length == 2) ? imagesAndReplies : [0, 0];
+}
+
+/**
+ * Gets all the post data from a catalog thread and converts it into an object
+ * @param root the root HTML element
+ * @returns a Post object 
+ */
+function getCatalogPost(root: HTMLElement) : Post {
+    let text: Fragment[] | undefined = 
+        root.querySelector('.replies')
+            ?.childNodes.slice(2)
+            .map(toFragment);
+    let id: string | undefined = root.parentNode.getAttribute('data-id');
+    let fileUrl: string | undefined = root.getElementsByTagName('a')[0]?.getAttribute('href');
+    let thumbnail: string | undefined = root.getElementsByTagName('img')[0]?.getAttribute('src');
+
+    return {
+        posterName: '',
+        dateTime: '',
+        id: id ? id : '',
+        repliesById: [],
+        files: [{
+            url: fileUrl ? fileUrl : '',
+            thumbnail: thumbnail ? thumbnail : '',
+            name: ''
+        }],
+        text: text ? text : [],
+        isOP: true,
+    }
 }

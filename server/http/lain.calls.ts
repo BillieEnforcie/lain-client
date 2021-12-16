@@ -3,7 +3,7 @@ import { LAIN_URL_BASE } from '../constants/request-constants';
 import { MAL_HTML, MAL_HTML_MESSAGE } from '../constants/response-constants';
 import * as H20 from '../converters/html2obj.converter';
 import * as Rest from './rest';
-import { ChThread, Index, Page } from '../types/response.types';
+import { Catalog, ChThread, Index, Page } from '../types/response.types';
 import { toChError, validateResponse } from './util';
 
 export async function getBoards() : Promise<Index> {
@@ -55,4 +55,26 @@ export async function getThread(board: string, threadId: string) : Promise<ChThr
     }
 
     return thread;
+}
+
+/**
+ * Grabs the catalog for the given board.
+ * Said catalog contains thread stubs for every thread 
+ * active on the board in question.
+ * @param board 
+ * @returns a Catalog full of threads 
+ */
+export async function getCatalog(board: string) : Promise<Catalog> {
+    let catalog: Catalog;
+
+    try {
+        let { body } = await Rest.get(`${LAIN_URL_BASE}/${board}/catalog.html`);
+        catalog = H20.toCatalog(board, body);
+    }
+    catch(err: unknown) {
+        console.log(err);
+        throw toChError(err as Error);
+    }
+
+    return catalog;
 }
