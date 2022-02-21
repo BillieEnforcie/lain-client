@@ -1,5 +1,5 @@
 import { parse, HTMLElement } from 'node-html-parser';
-import { BOARDS_CORRECT_HTML, BOARDS_NO_CHILDREN, CORRECT_PAGE, CORRECT_THREAD, EMPTY_HTML, PAGE_HTML, THREAD_HTML } from '../constants/test/test-constants';
+import { BOARDS_CORRECT_HTML, BOARDS_NO_CHILDREN, CATALOG_HTML, CORRECT_CATALOG, CORRECT_PAGE, CORRECT_THREAD, EMPTY_HTML, PAGE_HTML, THREAD_HTML } from '../constants/test/test-constants';
 import * as H20 from './html2obj.converter';
 
 test('toBoards_Happy Path', () => {
@@ -34,3 +34,8 @@ test('toPage_Happy Path', () => {
     expect(H20.toPage('progr', 1, PAGE_HTML))
         .toEqual(CORRECT_PAGE);
 });
+
+test('toCatalog_Happy Path', () => {
+    expect(H20.toCatalog('progr', CATALOG_HTML))
+        .toEqual(CORRECT_CATALOG);
+})

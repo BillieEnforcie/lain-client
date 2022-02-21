@@ -1,4 +1,4 @@
-import { Board, ChError, ChThread, Index, Page, Post } from "../../types/response.types";
+import { Board, Catalog, ChError, ChThread, Index, Page, Post } from "../../types/response.types";
 
 export const BOARDS_CORRECT_HTML = 
 `
@@ -130,6 +130,28 @@ export const PAGE_HTML =
    </body>
 </html>
 `
+
+export const CATALOG_HTML = 
+`
+<!doctype html>
+<html>
+   <head>
+   </head>
+   <body class="8chan vichan is-not-moderator theme-catalog active-catalog" data-stylesheet="dark.css">
+      <div class="threads">
+         <div id="Grid">
+            <div class="mix"data-reply="229" data-bump="1638125931" data-time="1610226533" data-id="23831" data-sticky="true" data-locked="false">
+               <div class="thread grid-li grid-size-small">
+                  <a href="/λ/res/23831.html">  <img src="/λ/thumb/1610226532659.png"                                                  id="img-23831" data-subject="Programming Employment" data-name="λx.x" data-muhdifference="" class="λ thread-image" title="Nov 28 18:58">                                        </a>                                                
+                  <div class="replies"><strong>R: 229 / I: 17 (sticky)</strong><p class="intro"><a href="/λ/res/23831.html"><span class="subject">Programming Employment</span></a></p>This is the Programming Employment thread, which exists for all general discussion regarding the topic.  All discussion of employment not superseded by any more specific thread topic which isn't concerned with employment belongs in this thread.<br/><br/>Do not create any threads for discussing employment, or they will be locked.  It would be appropriate to discuss employment concerning a single language here, or in a thread dedicated to that language, as an example.<br/><br/>Prefer to use this thread instead of the Beginner's General for employment questions regarding beginners, inexperience, and like topics.</div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <hr/>
+   </body>
+</html>
+`;
 
 export const EMPTY_HTML =
 `
@@ -288,4 +310,68 @@ export const CORRECT_PAGE: Page =
     num: 1,
     threads: [CORRECT_THREAD],
     totalPages: 13,
-}
+};
+
+export const CORRECT_CATALOG: Catalog = 
+{
+    board: 'progr',
+    threads: 
+        [
+            {
+                id: '23831',
+                board: 'progr',
+                pinned: true,
+                replies: 229,
+                images: 17,
+                title: 'Programming Employment',
+                thumbNail: '/λ/thumb/1610226532659.png',
+                expanded: false,
+                posts:
+                    [
+                        {
+                            posterName: '',
+                            dateTime: '',
+                            id: '23831',
+                            repliesById: [],
+                            isOP: true,
+                            files:
+                                [
+                                    {
+                                        url: '/λ/res/23831.html',
+                                        thumbnail: '/λ/thumb/1610226532659.png',
+                                        name: '',
+                                    },
+                                ],
+                            text: 
+                                [
+                                    {
+                                        pt: null,
+                                        text: "This is the Programming Employment thread, which exists for all general discussion regarding the topic.  All discussion of employment not superseded by any more specific thread topic which isn't concerned with employment belongs in this thread.",
+                                    },
+                                    {
+                                        br: null,
+                                    },
+                                    {
+                                        br: null,
+                                    },
+                                    {
+                                        pt: null,
+                                        text: "Do not create any threads for discussing employment, or they will be locked.  It would be appropriate to discuss employment concerning a single language here, or in a thread dedicated to that language, as an example.",
+                                    },
+                                    {
+                                        br: null,
+                                    },
+                                    {
+                                        br: null,
+                                    },
+                                    {
+                                        pt: null,
+                                        text: "Prefer to use this thread instead of the Beginner's General for employment questions regarding beginners, inexperience, and like topics."
+                                    },
+                                ]
+                        }
+                    ]
+            }    
+        ]
+    
+};

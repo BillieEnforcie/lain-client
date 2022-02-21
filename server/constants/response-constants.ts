@@ -2,7 +2,7 @@ import { Status } from "../types/response.types";
 
 export const ERROR_STATUS: Map<number, Status> = new Map(
     [
-        [400, { name: 'Bad Response', code: 400 }],
+        [400, { name: 'Bad Request', code: 400 }],
         [401, { name: 'Unauthorized', code: 401 }],
         [403, { name: 'Forbidden', code: 403 }],
         [404, { name: 'Not Found', code: 404 }],

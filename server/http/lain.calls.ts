@@ -1,10 +1,11 @@
-import got from 'got';
 import { LAIN_URL_BASE } from '../constants/request-constants';
 import { MAL_HTML, MAL_HTML_MESSAGE } from '../constants/response-constants';
 import * as H20 from '../converters/html2obj.converter';
 import * as Rest from './rest';
 import { Catalog, ChThread, Index, Page } from '../types/response.types';
 import { toChError, validateResponse } from './util';
+import { FileType } from '../types/generic.types';
+import { Writable } from 'stream';
 
 export async function getBoards() : Promise<Index> {
     let boards;
@@ -77,4 +78,13 @@ export async function getCatalog(board: string) : Promise<Catalog> {
     }
 
     return catalog;
+}
+
+export function getFile(board: string, filetype: FileType, fileId: string, outStream: Writable) : Promise<void> {
+    let url = `${LAIN_URL_BASE}/${board}/${convertLainFileType(filetype)}/${fileId}`;
+    return Rest.getFile(url, outStream)
+}
+
+function convertLainFileType(ft: FileType): string {
+    return ft === 'fullSize' ? 'src' : 'thumb';
 }

@@ -22,7 +22,7 @@ function getStatus(error: Error): Status {
     }
 }
 
-export function validateResponse(response: Response<string>) {
+export function validateResponse(response: Response<any>) {
     if(response.statusCode > 299 || response.statusCode < 200) {
         throw { name: response.statusCode.toString(), message: response.statusMessage };
     }
