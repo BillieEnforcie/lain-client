@@ -6,6 +6,7 @@ import { Catalog, ChThread, Index, Page } from '../types/response.types';
 import { toChError, validateResponse } from './util';
 import { FileType } from '../types/generic.types';
 import { Writable } from 'stream';
+import { promisify } from 'util';
 
 export async function getBoards() : Promise<Index> {
     let boards;
@@ -82,7 +83,17 @@ export async function getCatalog(board: string) : Promise<Catalog> {
 
 export function getFile(board: string, filetype: FileType, fileId: string, outStream: Writable) : Promise<void> {
     let url = `${LAIN_URL_BASE}/${board}/${convertLainFileType(filetype)}/${fileId}`;
-    return Rest.getFile(url, outStream)
+    let promise : Promise<void>;
+
+    try {
+        promise = Rest.getFile(url, outStream);
+    }
+    catch(err: unknown) {
+        console.log('bad file babyyyy');
+        throw toChError(err as Error);
+    }
+
+    return promise;
 }
 
 function convertLainFileType(ft: FileType): string {

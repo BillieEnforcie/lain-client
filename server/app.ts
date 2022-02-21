@@ -1,6 +1,7 @@
 import express, { application, Request, Response } from 'express';
 import { ERROR_STATUS } from './constants/response-constants';
 import * as Lain from './http/lain.calls';
+import { toChError } from './http/util';
 import { FileType } from './types/generic.types';
 
 const app = express();
@@ -105,10 +106,14 @@ function getFileLain(req: Request, res: Response) : void {
         console.log('wrong file type: ' + fileType);
         res.status(400).send({ status: ERROR_STATUS.get(400)});
     }
+
+    res.on('error', (err) => {
+        res.status(500).send(toChError(err));
+    });
+
     Lain.getFile(board, fileType as FileType, fileId, res)
         .catch(err => {
             console.log(err);
-            res.status(500).send(err);
         });
 }
 

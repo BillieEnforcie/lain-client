@@ -15,9 +15,13 @@ export function toChError(error: Error): ChError {
 
 function getStatus(error: Error): Status {
     //console.log("AYY VINNY GET THE STATUS ALREADY")
-    switch(error.name) {
+    let status: Status | undefined;
+    switch(error.message) {
+        case 'Response code 404 (Not Found)':
+            status = ERROR_STATUS.get(404);
+            return status ? status : { name: '', code: 0 };
         default:
-            let status = ERROR_STATUS.get(500);
+            status = ERROR_STATUS.get(500);
             return status ? status : { name: '', code: 0 };
     }
 }
